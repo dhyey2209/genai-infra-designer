@@ -1,0 +1,31 @@
+# tasks.yaml
+
+analyze_requirements:
+  description: >
+    Analyze the given system idea: "{{ topic }}".
+    Break it down into core technical requirements — e.g., number of users, traffic patterns, statefulness, scaling needs, latency concerns.
+    Output as bullet points.
+  expected_output: >
+    A list of 5–10 key system design requirements.
+  agent: infra_analyst
+
+propose_architecture:
+  description: >
+    Based on the requirements, propose a cloud architecture to support the system.
+    List components like compute, networking, database, queues, storage, etc., and explain each choice briefly.
+  expected_output: >
+    A list of services with justifications, like:
+    - ALB: handles traffic across AZs
+    - EKS: hosts microservices
+    - RDS (Postgres): stores product/catalog data
+  agent: system_architect
+  context: [analyze_requirements]
+
+generate_iac:
+  description: >
+    For each service in the architecture, write a Terraform snippet (or stub) that shows how to provision it.
+    Keep each one short (under 25 lines) and add inline comments where helpful.
+  expected_output: >
+    A markdown doc with Terraform blocks and descriptions.
+  agent: iac_engineer
+  context: [propose_architecture]
